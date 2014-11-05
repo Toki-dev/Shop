@@ -146,6 +146,7 @@
 	<!-- END Product Title -->
 
 	<div id="product-image-container" class="clearfix">
+	{if isset($use_bigger_image)}
 		<!-- BEGIN Product Images -->
 		<div id="wBiggerImage">
 			<a href="#image-zoom" id="product-image" data-toggle="modal" data-image="{$arr_product.pic_big}" data-width="{if $arr_product.pic_b_width > 1024}1024{else}{$arr_product.pic_b_width}{/if}" data-title="{$arr_product.pname_escaped}">
@@ -155,90 +156,127 @@
 				<img src="{if $arr_product.pic != ''}{$arr_product.pic_normal}{else}{$static_url}img/no_photo.png{/if}" id="product-image-display" alt="{$arr_product.pname_escaped}" />
 				{*<span class="icon-zoom"></span>*}
 			</a>
+	{else}
+		<!-- BEGIN Product Images -->
+		<a href="#image-zoom" id="product-image" data-toggle="modal" data-image="{$arr_product.pic_big}" data-width="{if $arr_product.pic_b_width > 1024}1024{else}{$arr_product.pic_b_width}{/if}" data-title="{$arr_product.pname_escaped}">
+			{if $arr_product.pic_b_height > 500 || $arr_product.pic_b_width > 300}
+			<span id="product-zoom"></span>
+			{/if}
+			<img src="{if $arr_product.pic != ''}{$arr_product.pic_normal}{else}{$static_url}img/no_photo.png{/if}" id="product-image-display" alt="{$arr_product.pname_escaped}" />
+			{*<span class="icon-zoom"></span>*}
+		</a>
 
-			
-			<!-- END Product Images -->
-
-			<!-- BEGIN Product Details -->
-			<div id="product-details">
-				<p id="product-quantity">{if $arr_product.qty === '0' || $arr_product.qty < 0}0 available{elseif $arr_product.qty == 1}Only 1 available{elseif $arr_product.qty > 1 && $arr_product.qty <= 10}{$arr_product.qty} available{else}More than 10 available{/if}</p>
-
-				<h4>Details</h4>
-
-				<p>{$smarty.const.PRODUCT_TEXT29}
-			{if $arr_product.usps_use == '1'}
-				{$smarty.const.PRODUCT_TEXT30} - <a href="#shipping-rates" data-toggle="modal-ajax" data-url="/check-shipping.php?pid={$arr_product.pid}{$sess_multi_par}&version=new">check</a>
-			{else}
-				{assign var='domestic_sz_count' value=$arr_domestic_sz|@count}
-				{assign var='sz_counter' value=0}
-				{foreach key=key item=item from=$arr_domestic_sz}
-					{assign var='sz_counter' value=$sz_counter+1}
-					{if $sz_counter == 1}
-						{if $item.shipping_rate == 0}
-							{$item.zone_name}: <b>free</b>
-						{else}
-							{$item.zone_name}: {$currency_symbol}{$item.shipping_rate}
-						{/if}
-					{/if}
+		{if $arr_product.pic_total > 1}
+		<div id="product-thumbs">
+			{if $arr_product.pic_total > 4}
+			<a href="#" id="product-thumbs-up"><span>Up</span></a>
+			{/if}
+			<ul>
+				<li><a href="#" data-image="{$arr_product.pic_normal}" data-zoom="{$arr_product.pic_big}" data-width="{if $arr_product.pic_b_width > 1024}1024{else}{$arr_product.pic_b_width}{/if}" data-title="{$arr_product.pname_escaped}"><img src="{$arr_product.pic_small}" width="81" height="81" alt="{$arr_product.pname_escaped}" /></a></li>
+				{foreach key=key item=item from=$arr_prpics}
+				<li><a href="#" data-image="{$item.pic_n}" data-zoom="{$item.pic_b}" data-width="{if $item.pic_b_width > 1024}1024{else}{$item.pic_b_width}{/if}" data-title="{$arr_product.pname_escaped}"><img src="{$item.pic_s}" width="81" height="81" alt="{$arr_product.pname_escaped}" /></a></li>
 				{/foreach}
-				{if domestic_sz_count == 1}
-				{else}
-					<a href="#shipping-rates" data-toggle="modal-ajax" data-url="/check-shipping.php?pid={$arr_product.pid}{$sess_multi_par}&version=new">(more destinations)</a>
-				{/if}
-			{/if}
-				</p>
-				
-			{if $arr_product.taxable == '1'}
-				{assign var='state_tax_count' value=$arr_state_tax|@count}
-				{if $state_tax_count > 0}
-					<p>{$smarty.const.PRODUCT_TEXT12}
-					{assign var='st_counter' value=1}
-					{foreach key=key item=item from=$arr_state_tax}
-						{if $st_counter == $state_tax_count}
-							{$item.state_name}: {$item.state_tax}%
-						{else}
-							{$item.state_name}: {$item.state_tax}%, 
-						{/if}
-						{assign var='st_counter' value=$st_counter+1}
-					{/foreach}
-					</p>
-				{/if}
-			{/if}
-				<p>Condition: {if $arr_product.used == '1'}{$smarty.const.PRODUCT_TEXT16}{else}{$smarty.const.PRODUCT_TEXT15}{/if}</p>
-
-				{if isset($arr_product.not_updated)}
-				<p id="product-disclaimer">{$smarty.const.PRODUCT_TEXT42}</p>
-				{/if}
-			</div>
-			<!-- END Product Details -->
-			
-			{if $arr_product.pic_total > 1}
-			<div id="product-thumbs">
-				{if $arr_product.pic_total > 4}
-				<a href="#" id="product-thumbs-up"><span>Up</span></a>
-				{/if}
-				<ul>
-					<li><a href="#" data-image="{$arr_product.pic_normal}" data-zoom="{$arr_product.pic_big}" data-width="{if $arr_product.pic_b_width > 1024}1024{else}{$arr_product.pic_b_width}{/if}" data-title="{$arr_product.pname_escaped}"><img src="{$arr_product.pic_small}" width="81" height="81" alt="{$arr_product.pname_escaped}" /></a></li>
-					{foreach key=key item=item from=$arr_prpics}
-					<li><a href="#" data-image="{$item.pic_n}" data-zoom="{$item.pic_b}" data-width="{if $item.pic_b_width > 1024}1024{else}{$item.pic_b_width}{/if}" data-title="{$arr_product.pname_escaped}"><img src="{$item.pic_s}" width="81" height="81" alt="{$arr_product.pname_escaped}" /></a></li>
-					{/foreach}
-					{*
-					<li><a href="#" data-image="{$static_url}/img/product-large.png" data-zoom="{$static_url}/img/product-large.png" data-title="Canon EOS 600D Kit"><img src="{$static_url}/img/product-thumb-1.png" width="81" height="81" /></a></li>
-					<li><a href="#" data-image="{$static_url}/img/product-large.png" data-zoom="{$static_url}/img/product-large.png" data-title="Canon EOS 600D Kit 2"><img src="{$static_url}/img/product-thumb-2.png" width="81" height="81" /></a></li>
-					<li><a href="#" data-image="{$static_url}/img/product-large.png" data-zoom="{$static_url}/img/product-large.png" data-title="Canon EOS 600D Kit 3"><img src="{$static_url}/img/product-thumb-3.png" width="81" height="81" /></a></li>
-					<li><a href="#" data-image="{$static_url}/img/product-large.png" data-zoom="{$static_url}/img/product-large.png" data-title="Canon EOS 600D Kit 4"><img src="{$static_url}/img/product-thumb-4.png" width="81" height="81" /></a></li>
-					<li><a href="#" data-image="{$static_url}/img/product-large.png" data-zoom="{$static_url}/img/product-large.png" data-title="Canon EOS 600D Kit 5"><img src="{$static_url}/img/product-thumb-1.png" width="81" height="81" /></a></li>
-					<li><a href="#" data-image="{$static_url}/img/product-large.png" data-zoom="{$static_url}/img/product-large.png" data-title="Canon EOS 600D Kit 6"><img src="{$static_url}/img/product-thumb-2.png" width="81" height="81" /></a></li>
-					<li><a href="#" data-image="{$static_url}/img/product-large.png" data-zoom="{$static_url}/img/product-large.png" data-title="Canon EOS 600D Kit 7"><img src="{$static_url}/img/product-thumb-3.png" width="81" height="81" /></a></li>
-					<li><a href="#" data-image="{$static_url}/img/product-large.png" data-zoom="{$static_url}/img/product-large.png" data-title="Canon EOS 600D Kit 8"><img src="{$static_url}/img/product-thumb-4.png" width="81" height="81" /></a></li>
-					*}
-				</ul>
-				{if $arr_product.pic_total > 4}
-				<a href="#" id="product-thumbs-down"><span>Down</span></a>
-				{/if}
-			</div>
+				{*
+				<li><a href="#" data-image="{$static_url}/img/product-large.png" data-zoom="{$static_url}/img/product-large.png" data-title="Canon EOS 600D Kit"><img src="{$static_url}/img/product-thumb-1.png" width="81" height="81" /></a></li>
+				<li><a href="#" data-image="{$static_url}/img/product-large.png" data-zoom="{$static_url}/img/product-large.png" data-title="Canon EOS 600D Kit 2"><img src="{$static_url}/img/product-thumb-2.png" width="81" height="81" /></a></li>
+				<li><a href="#" data-image="{$static_url}/img/product-large.png" data-zoom="{$static_url}/img/product-large.png" data-title="Canon EOS 600D Kit 3"><img src="{$static_url}/img/product-thumb-3.png" width="81" height="81" /></a></li>
+				<li><a href="#" data-image="{$static_url}/img/product-large.png" data-zoom="{$static_url}/img/product-large.png" data-title="Canon EOS 600D Kit 4"><img src="{$static_url}/img/product-thumb-4.png" width="81" height="81" /></a></li>
+				<li><a href="#" data-image="{$static_url}/img/product-large.png" data-zoom="{$static_url}/img/product-large.png" data-title="Canon EOS 600D Kit 5"><img src="{$static_url}/img/product-thumb-1.png" width="81" height="81" /></a></li>
+				<li><a href="#" data-image="{$static_url}/img/product-large.png" data-zoom="{$static_url}/img/product-large.png" data-title="Canon EOS 600D Kit 6"><img src="{$static_url}/img/product-thumb-2.png" width="81" height="81" /></a></li>
+				<li><a href="#" data-image="{$static_url}/img/product-large.png" data-zoom="{$static_url}/img/product-large.png" data-title="Canon EOS 600D Kit 7"><img src="{$static_url}/img/product-thumb-3.png" width="81" height="81" /></a></li>
+				<li><a href="#" data-image="{$static_url}/img/product-large.png" data-zoom="{$static_url}/img/product-large.png" data-title="Canon EOS 600D Kit 8"><img src="{$static_url}/img/product-thumb-4.png" width="81" height="81" /></a></li>
+				*}
+			</ul>
+			{if $arr_product.pic_total > 4}
+			<a href="#" id="product-thumbs-down"><span>Down</span></a>
 			{/if}
 		</div>
+		{/if}
+		<!-- END Product Images -->
+	{/if}
+
+		<!-- BEGIN Product Details -->
+		<div id="product-details">
+			<p id="product-quantity">{if $arr_product.qty === '0' || $arr_product.qty < 0}0 available{elseif $arr_product.qty == 1}Only 1 available{elseif $arr_product.qty > 1 && $arr_product.qty <= 10}{$arr_product.qty} available{else}More than 10 available{/if}</p>
+
+			<h4>Details</h4>
+
+			<p>{$smarty.const.PRODUCT_TEXT29}
+		{if $arr_product.usps_use == '1'}
+			{$smarty.const.PRODUCT_TEXT30} - <a href="#shipping-rates" data-toggle="modal-ajax" data-url="/check-shipping.php?pid={$arr_product.pid}{$sess_multi_par}&version=new">check</a>
+		{else}
+			{assign var='domestic_sz_count' value=$arr_domestic_sz|@count}
+			{assign var='sz_counter' value=0}
+			{foreach key=key item=item from=$arr_domestic_sz}
+				{assign var='sz_counter' value=$sz_counter+1}
+				{if $sz_counter == 1}
+					{if $item.shipping_rate == 0}
+						{$item.zone_name}: <b>free</b>
+					{else}
+						{$item.zone_name}: {$currency_symbol}{$item.shipping_rate}
+					{/if}
+				{/if}
+			{/foreach}
+			{if domestic_sz_count == 1}
+			{else}
+				<a href="#shipping-rates" data-toggle="modal-ajax" data-url="/check-shipping.php?pid={$arr_product.pid}{$sess_multi_par}&version=new">(more destinations)</a>
+			{/if}
+		{/if}
+			</p>
+			
+		{if $arr_product.taxable == '1'}
+			{assign var='state_tax_count' value=$arr_state_tax|@count}
+			{if $state_tax_count > 0}
+				<p>{$smarty.const.PRODUCT_TEXT12}
+				{assign var='st_counter' value=1}
+				{foreach key=key item=item from=$arr_state_tax}
+					{if $st_counter == $state_tax_count}
+						{$item.state_name}: {$item.state_tax}%
+					{else}
+						{$item.state_name}: {$item.state_tax}%, 
+					{/if}
+					{assign var='st_counter' value=$st_counter+1}
+				{/foreach}
+				</p>
+			{/if}
+		{/if}
+			<p>Condition: {if $arr_product.used == '1'}{$smarty.const.PRODUCT_TEXT16}{else}{$smarty.const.PRODUCT_TEXT15}{/if}</p>
+
+			{if isset($arr_product.not_updated)}
+			<p id="product-disclaimer">{$smarty.const.PRODUCT_TEXT42}</p>
+			{/if}
+		</div>
+		<!-- END Product Details -->
+
+	{if isset($use_bigger_image)}
+		{if $arr_product.pic_total > 1}
+		<div id="product-thumbs">
+			{if $arr_product.pic_total > 4}
+			<a href="#" id="product-thumbs-up"><span>Up</span></a>
+			{/if}
+			<ul class="scrolling-thumbnails">
+				<li><a href="#" data-image="{$arr_product.pic_normal}" data-zoom="{$arr_product.pic_big}" data-width="{if $arr_product.pic_b_width > 1024}1024{else}{$arr_product.pic_b_width}{/if}" data-title="{$arr_product.pname_escaped}"><img src="{$arr_product.pic_small}" width="81" height="81" alt="{$arr_product.pname_escaped}" /></a></li>
+				{foreach key=key item=item from=$arr_prpics}
+				<li><a href="#" data-image="{$item.pic_n}" data-zoom="{$item.pic_b}" data-width="{if $item.pic_b_width > 1024}1024{else}{$item.pic_b_width}{/if}" data-title="{$arr_product.pname_escaped}"><img src="{$item.pic_s}" width="81" height="81" alt="{$arr_product.pname_escaped}" /></a></li>
+				{/foreach}
+				{*
+				<li><a href="#" data-image="{$static_url}/img/product-large.png" data-zoom="{$static_url}/img/product-large.png" data-title="Canon EOS 600D Kit"><img src="{$static_url}/img/product-thumb-1.png" width="81" height="81" /></a></li>
+				<li><a href="#" data-image="{$static_url}/img/product-large.png" data-zoom="{$static_url}/img/product-large.png" data-title="Canon EOS 600D Kit 2"><img src="{$static_url}/img/product-thumb-2.png" width="81" height="81" /></a></li>
+				<li><a href="#" data-image="{$static_url}/img/product-large.png" data-zoom="{$static_url}/img/product-large.png" data-title="Canon EOS 600D Kit 3"><img src="{$static_url}/img/product-thumb-3.png" width="81" height="81" /></a></li>
+				<li><a href="#" data-image="{$static_url}/img/product-large.png" data-zoom="{$static_url}/img/product-large.png" data-title="Canon EOS 600D Kit 4"><img src="{$static_url}/img/product-thumb-4.png" width="81" height="81" /></a></li>
+				<li><a href="#" data-image="{$static_url}/img/product-large.png" data-zoom="{$static_url}/img/product-large.png" data-title="Canon EOS 600D Kit 5"><img src="{$static_url}/img/product-thumb-1.png" width="81" height="81" /></a></li>
+				<li><a href="#" data-image="{$static_url}/img/product-large.png" data-zoom="{$static_url}/img/product-large.png" data-title="Canon EOS 600D Kit 6"><img src="{$static_url}/img/product-thumb-2.png" width="81" height="81" /></a></li>
+				<li><a href="#" data-image="{$static_url}/img/product-large.png" data-zoom="{$static_url}/img/product-large.png" data-title="Canon EOS 600D Kit 7"><img src="{$static_url}/img/product-thumb-3.png" width="81" height="81" /></a></li>
+				<li><a href="#" data-image="{$static_url}/img/product-large.png" data-zoom="{$static_url}/img/product-large.png" data-title="Canon EOS 600D Kit 8"><img src="{$static_url}/img/product-thumb-4.png" width="81" height="81" /></a></li>
+				*}
+			</ul>
+			{if $arr_product.pic_total > 4}
+			<a href="#" id="product-thumbs-down"><span>Down</span></a>
+			{/if}
+		</div>
+		{/if}
+	</div>
+	{/if}
 	</div>
 {*
 <div id="page-footer-ad">
