@@ -10,7 +10,7 @@
 		upCount: '#product-thumbs-total-up',
 		downButton: '#product-thumbs-down',
 		downCount: '#product-thumbs-total-down',
-		itemsToDisplay: 4,
+		itemsToDisplay: 7,
 		slideOffset: 0,
 		target: ''
 	};
@@ -117,10 +117,10 @@
 				$currentItem = $container.find('li:first-child');
 				$currentItem.addClass('current');
 				if (settings.slideOffset == 0) {
-					var height = (isNaN(parseInt($currentItem.css('height'))) ? 0 : parseInt($currentItem.css('height')));
-						marginTop = (isNaN(parseInt($currentItem.css('margin-top'))) ? 0 : parseInt($currentItem.css('margin-top')));
-						marginBottom = (isNaN(parseInt($currentItem.css('margin-bottom'))) ? 0 : parseInt($currentItem.css('margin-bottom')));				
-					settings.slideOffset = height + marginTop + marginBottom + 2;
+					var width = (isNaN(parseInt($currentItem.css('width'))) ? 0 : parseInt($currentItem.css('width')));
+						marginLeft = (isNaN(parseInt($currentItem.css('margin-left'))) ? 0 : parseInt($currentItem.css('margin-left')));
+						marginRight = (isNaN(parseInt($currentItem.css('margin-right'))) ? 0 : parseInt($currentItem.css('margin-right')));				
+					settings.slideOffset = width + marginLeft + marginRight + 2;
 				}
 
 				if ($currentItem[0] == $container.find('li:first-child')[0]) {
@@ -131,10 +131,10 @@
 				}
 
 				// Initial item offsets
-				var top = 0;
+				var left = 0;
 				$container.find('li').each(function() {
-					$(this).css('top', top + 'px');
-					top = top + settings.slideOffset;
+					$(this).css('left', left + 'px');
+					left = left + settings.slideOffset;
 				});
 
 				// More items bottom
@@ -161,7 +161,7 @@
 					// Slide the images down
 					currentOffset = currentOffset + settings.slideOffset;
 					$container.find('li').each(function() {
-						$(this).css('top', $(this).position().top + settings.slideOffset);
+						$(this).css('left', $(this).position().left+ settings.slideOffset);
 					});
 
 					// Decrement the up count
@@ -200,7 +200,7 @@
 					// Slide the images up
 					currentOffset = currentOffset - settings.slideOffset;
 					$container.find('li').each(function() {
-						$(this).css('top', $(this).position().top - settings.slideOffset);
+						$(this).css('left', $(this).position().left - settings.slideOffset);
 					});
 
 					// Decrement the down count
@@ -257,8 +257,7 @@
 	
 			$(this).css({
 				position:'absolute',
-				left: left,
-				top: top
+				left: left
 			});
 		});
 		
@@ -268,8 +267,7 @@
 		
 				$(this).css({
 					position:'absolute',
-					left: left,
-					top: top
+					left: left
 				});
 			});
 		});	
@@ -359,7 +357,4 @@ $(function() {
 				$('#image-zoom-wrapper').hide();
 		});	
 	})
-	
-	$('#seller_info_thumbs').carousel({interval: false});
-	
 });
