@@ -254,7 +254,7 @@
 			{if $arr_product.pic_total > 4}
 			<a href="#" id="product-thumbs-up"><span>Up</span></a>
 			{/if}
-			<ul class="scrolling-thumbnails">
+			<ul id="scrolling-thumbnails">
 				<li><a href="#" data-image="{$arr_product.pic_normal}" data-zoom="{$arr_product.pic_big}" data-width="{if $arr_product.pic_b_width > 1024}1024{else}{$arr_product.pic_b_width}{/if}" data-title="{$arr_product.pname_escaped}"><img src="{$arr_product.pic_small}" width="81" height="81" alt="{$arr_product.pname_escaped}" /></a></li>
 				{foreach key=key item=item from=$arr_prpics}
 				<li><a href="#" data-image="{$item.pic_n}" data-zoom="{$item.pic_b}" data-width="{if $item.pic_b_width > 1024}1024{else}{$item.pic_b_width}{/if}" data-title="{$arr_product.pname_escaped}"><img src="{$item.pic_s}" width="81" height="81" alt="{$arr_product.pname_escaped}" /></a></li>
